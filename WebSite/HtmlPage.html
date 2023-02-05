@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <script src="js/jquery-1.7.js"></script>
+    <script type="text/javascript">
+        var barcodeScannerTimer;
+        var barcodeString = '';
+        $(document).ready(function () {
+
+
+            // capture barcode scanner input
+            $('body').on('keypress', function (e) {
+                barcodeString = barcodeString + String.fromCharCode(e.charCode);
+
+                clearTimeout(barcodeScannerTimer);
+                barcodeScannerTimer = setTimeout(function () {
+                    processBarcode();
+                }, 300);
+            });
+
+            function processBarcode() {
+                console.log('inside processBarcode with barcodeString "' + barcodeString + '"');
+
+                if (!isNaN(barcodeString) && barcodeString != '') {  // @todo this check is lame. improve.
+                    alert('ready to process barcode: ' + barcodeString);
+                } else {
+                    alert('barcode is invalid: ' + barcodeString);
+                }
+
+                barcodeString = ''; // reset
+            }
+
+
+            window.simulateBarcodeScan = function () {
+                // simulate a barcode being scanned
+                var barcode = '9781623411435';
+                for (var i = 0; i < barcode.length; i++) {
+                    var e = jQuery.Event("keypress");
+                    e.which = barcode[i].charCodeAt(0);
+                    e.charCode = barcode[i].charCodeAt(0);
+                    $("body").focus().trigger(e);
+                }
+            }
+        });
+        </script>
+    </head>
+    <body>
+        <button type="button" onclick="simulateBarcodeScan();">Simulate Barcode scan</button>
+    </body>
+    </html>

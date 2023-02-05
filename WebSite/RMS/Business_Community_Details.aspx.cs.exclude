@@ -1,0 +1,114 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+public partial class RMS_Business_Community_Details : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+       
+        
+
+    }
+
+
+    protected string UploadFolderPath = "~/RMS/EmpPictures/" ;
+    protected void FileUploadComplete(object sender, EventArgs e)
+    {
+
+        long i = 1;
+        foreach (byte b in Guid.NewGuid().ToByteArray())
+        {
+            i *= ((int)b + 1);
+        }
+        string newFileName = string.Format("{0:x}", i - DateTime.Now.Ticks);
+        
+  
+        string filename = System.IO.Path.GetFileName(AsyncFileUpload1.FileName);
+
+        AsyncFileUpload1.SaveAs(Server.MapPath(this.UploadFolderPath) + newFileName+".jpg");
+
+
+
+        HttpCookie ActiveTabs = new HttpCookie("tabs");
+        ActiveTabs.Values["url"] = newFileName;
+        Response.Cookies.Add(ActiveTabs);
+
+        //string query = "update NonResident set [NewPhoto]'" + filename + "' where EID='5960'";
+
+        //DBManager ObjDBManager = new DBManager();
+        //ObjDBManager.InsertUpdateQuery(query, "vmsconnectionstring");
+     
+    }
+
+
+    protected string UploadFolderPathForFamily = "~/RMS/EmpPictures/EmpFamilyPicture/";
+    protected void FileUploadCompleteForFamily(object sender, EventArgs e)
+    {
+
+        long i = 1;
+        foreach (byte b in Guid.NewGuid().ToByteArray())
+        {
+            i *= ((int)b + 1);
+        }
+        string newFileName = string.Format("{0:x}", i - DateTime.Now.Ticks);
+
+
+        string filename = System.IO.Path.GetFileName(AsyncFileUploadForFamily.FileName);
+
+        AsyncFileUploadForFamily.SaveAs(Server.MapPath(this.UploadFolderPathForFamily) + newFileName + ".jpg");
+
+        HttpCookie ActiveTabs = new HttpCookie("tabsForFamily");
+        ActiveTabs.Values["urlForFamily"] = newFileName;
+        Response.Cookies.Add(ActiveTabs);
+
+    }
+
+    protected string UploadFolderPathForServant = "~/RMS/EmpPictures/EmpServantPicture/";
+    protected void FileUploadCompleteForServant(object sender, EventArgs e)
+    {
+
+        long i = 1;
+        foreach (byte b in Guid.NewGuid().ToByteArray())
+        {
+            i *= ((int)b + 1);
+        }
+        string newFileName = string.Format("{0:x}", i - DateTime.Now.Ticks);
+
+
+        string filename = System.IO.Path.GetFileName(AsyncFileUploadForServant.FileName);
+
+        AsyncFileUploadForServant.SaveAs(Server.MapPath(this.UploadFolderPathForServant) + newFileName + ".jpg");
+
+        HttpCookie ActiveTabs = new HttpCookie("tabsForServant");
+        ActiveTabs.Values["urlForServant"] = newFileName;
+        Response.Cookies.Add(ActiveTabs);
+
+    }
+
+
+    protected string UploadFolderPathForServantFamily = "~/RMS/EmpPictures/EmpServantPicture/ServantFamilyPicture/";
+    protected void FileUploadCompleteForServantFamily(object sender, EventArgs e)
+    {
+
+        long i = 1;
+        foreach (byte b in Guid.NewGuid().ToByteArray())
+        {
+            i *= ((int)b + 1);
+        }
+        string newFileName = string.Format("{0:x}", i - DateTime.Now.Ticks);
+
+
+        string filename = System.IO.Path.GetFileName(AsyncFileUploadForServantFamily.FileName);
+
+        AsyncFileUploadForServantFamily.SaveAs(Server.MapPath(this.UploadFolderPathForServantFamily) + newFileName + ".jpg");
+
+        HttpCookie ActiveTabs = new HttpCookie("tabsForServantFamily");
+        ActiveTabs.Values["urlForServantFamily"] = newFileName;
+        Response.Cookies.Add(ActiveTabs);
+
+    }
+}

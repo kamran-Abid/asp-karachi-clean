@@ -1,0 +1,210 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PVACSMaster.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Default" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+
+    </asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+</asp:ScriptManager> 
+    <script type="text/javascript">
+
+
+        var barcodeScannerTimer;
+        var barcodeString = '';
+        $(document).ready(function () {
+
+
+            // capture barcode scanner input
+            $('body').on('keypress', function (e) {
+                barcodeString = barcodeString + String.fromCharCode(e.charCode);
+
+                clearTimeout(barcodeScannerTimer);
+                barcodeScannerTimer = setTimeout(function () {
+                    processBarcode();
+                }, 300);
+            });
+
+            function processBarcode() {
+                console.log('inside processBarcode with barcodeString "' + barcodeString + '"');
+
+                if (!isNaN(barcodeString) && barcodeString != '') {  // @todo this check is lame. improve.
+                   //do nothing;
+                } else {
+                    PageMethods.MyMethod(barcodeString, onSucceed, onError);
+                    //alert('barcode is invalid: ' + barcodeString);
+                }
+
+                barcodeString = ''; // reset
+            }
+
+
+           
+        });
+
+    //    var barcode="";
+    //$(document).keydown(function(e) {
+
+    // //  MyFunction(e);
+    //    // btnAccept_onclic();
+        
+    //});
+
+    function btnAccept_onclic() {
+        PageMethods.docall(onSuccess, onFailure);
+    }
+
+    function onSuccess(result) {
+        var a;
+        a = result.split("\n");
+
+
+        $("textarea[id$='richTextBox1']").val(result);
+    }
+
+
+    function onFailure(error) {
+        alert(error);
+    }
+    
+    var i = 0;
+    var barcode = "";
+    function MyFunction(e) {
+       
+       
+       
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (e.keyCode == 13)// Enter key hit
+        {
+            i++;
+           
+           
+        }
+
+        else {
+            barcode = barcode + String.fromCharCode(e.which);
+        }
+        if (i == 8) {
+            i = 0;
+            
+            PageMethods.MyMethod(barcode, onSucceed, onError);
+            return false;
+        }
+      
+    }
+    //CallBack method when the page call success
+    function onSucceed(results, currentContext, methodName) {
+       
+       
+      
+        var arry='';
+        arry = results.split("\r");
+        $("input[id$='txtUTokenNo']").val(arry[0]);
+        $("input[id$='txtUIDCardNo']").val(arry[1]);
+        $("input[id$='txtUFamilyNo']").val(arry[2]);
+        $("input[id$='txtUDOB']").val(arry[3]);
+        $("input[id$='txtUName']").val(arry[4]);
+        
+        $("input[id$='txtUFatherName']").val(arry[5]);
+      
+        $("textarea[id$='txtUAddress']").val(arry[6]);
+        
+    }
+    //CallBack method when the page call fails due to internal, server error 
+    function onError(results, currentContext, methodName) {
+        //Do here failure event 
+    }
+    </script>
+    <div id="abc">
+        <button type="button" onclick="simulateBarcodeScan();">Simulate Barcode scan</button>
+        <table style="width:95%;" >
+            <tr>
+                
+                <td>
+                 <pre>
+                    <asp:TextBox runat="server" ID="richTextBox1"  Width="500px" Height="200px" TextMode="MultiLine" ></asp:TextBox>
+                    </pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <asp:Button ID="btnOutput" Text="Output" runat="server" OnClick="btnOutput_Click" />
+                </td>
+
+            </tr>
+            <tr style="display:none;">
+                
+                
+                <td >
+                    <pre>ggg
+                      <asp:TextBox runat="server" Width="500px"  Height="200px" ID="richTextBox2" TextMode="MultiLine" style="text-align:right;font-family:'Tahoma'; font-size:16px; background-color:white; color:black;" ></asp:TextBox>
+                   </pre>
+
+                </td>
+
+            </tr>
+             <tr>
+                <td  style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUTokenNo" Width="40%" style="text-align:right;font-weight:bold;"></asp:TextBox>
+               
+                  <label style="font-weight:bold" >:ٹوکن نمبر</label>  
+                </td>
+            </tr>
+             <tr>
+                <td colspan="2" style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUIDCardNo" Width="40%" style="text-align:right;font-weight:bold;"></asp:TextBox>
+               
+                  <label style="font-weight:bold" >:شناختی کارڈ کا نمبر </label>  
+                </td>
+            </tr>
+             <tr>
+                <td colspan="2" style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUFamilyNo" Width="40%" style="text-align:right;font-weight:bold;"></asp:TextBox>
+               
+                  <label style="font-weight:bold" >:خاندان کا نمبر</label>  
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUName" Width="40%" style="text-align:right;font-weight:bold;"></asp:TextBox>
+               
+                  <label style="font-weight:bold" >:نام</label>  
+                </td>
+            </tr>
+             <tr>
+                <td colspan="2" style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUFatherName" Width="40%" style="text-align:right;font-weight:bold;"></asp:TextBox>
+               
+                  <label style="font-weight:bold" >:والد کا نام</label>  
+                </td>
+            </tr>
+             <tr>
+                <td colspan="2" style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUDOB" Width="40%" style="text-align:right;font-weight:bold;"></asp:TextBox>
+               
+                  <label style="font-weight:bold" >:تاریخ پیدائش</label>  
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUAddress" Width="40%" TextMode="MultiLine" style="text-align:right;font-weight:bold;height:75px;"></asp:TextBox>
+               
+                  <label style="font-weight:bold;vertical-align:top;" >:ایڈریس</label>  
+                </td>
+            </tr>
+             <tr style="display:none;">
+                <td colspan="2" style="padding-left:40%">
+                    <asp:TextBox runat="server" ID="txtUCity" Width="40%" style="text-align:right;font-weight:bold;"></asp:TextBox>
+               
+                  <label style="font-weight:bold" >:شہر/گاؤں</label>  
+                </td>
+            </tr>
+           
+
+        </table>
+    
+    </div>
+  <script>
+
+  </script>
+    </asp:Content>
